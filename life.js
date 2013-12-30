@@ -8,7 +8,7 @@ $(document).ready(function() {
   $world = makeTableHTML(world);
   $("body").append($world);
 
-  while (true) {
+  window.setTimeout(function() {
     for (var i = 1; i < numColumns - 1; i++) {
       for (var j = 1; j < numLines - 1; j++) {
         aliveCount = neighborCount(i, j, world);
@@ -22,10 +22,10 @@ $(document).ready(function() {
       }
     }
     $newWorld = makeTableHTML(newWorld);
-    $("body").remove($world);
-    $("body").append($newWorld);
+    $("table").remove();
+    $("body").append(makeTableHTML(newWorld));
     world = newWorld;
-  }
+  }, 1000);
 });
 
 
@@ -35,9 +35,9 @@ function makeTableHTML(myArray) {
         result += "<tr>";
         for(var j = 0; j < myArray[i].length; j++) {
             if (myArray[i][j] == 1) {
-              result += "<td height=20px width=20px bgcolor='000000' id='"+ i + "_" + j + "''>" + myArray[i][j] + "</td>";
+              result += "<td height=20px width=20px bgcolor='000000'>" + myArray[i][j] + "</td>";
             } else {
-              result += "<td height=20px width=20px id='"+ i + "_" + j + "''>" + myArray[i][j] + "</td>";
+              result += "<td height=20px width=20px>" + myArray[i][j] + "</td>";
             }
         }
         result += "</tr>";
