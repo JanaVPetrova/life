@@ -1,22 +1,31 @@
 $(document).ready(function() {
+  var numLines = 20;
+  var numColumns = 20;
 
-  var row = [];
-  var world = [];
-
-  var numLines = 10;
-  var numColumns = 10;
-
-  for (var i = 0; i < numColumns; i++) {
-    world[i] = [];
-    for (var j = 0; j < numLines; j++) {
-      world[i][j] = getRandom(0, 1);
-    }
-
-  }
+  var world = init(numLines, numColumns);
+  var newWorld = world;
 
   $world = makeTableHTML(world);
-  console.log($("body").append($world));
+  $("body").append($world);
 
+  while (true) {
+    for (var i = 1; i < numColumns - 1; i++) {
+      for (var j = 1; j < numLines - 1; j++) {
+        aliveCount = neighborCount(i, j, world);
+
+        if ((aliveCount == 2) || (aliveCount == 3)) {
+          newWorld[i][j] = 1;
+        }
+        if ((world[i][j] == 1) && ((aliveCount <= 1) || (aliveCount > 3))) {
+          newWorld[i][j] = 0;
+        }
+      }
+    }
+    $newWorld = makeTableHTML(newWorld);
+    $("body").remove($world);
+    $("body").append($newWorld);
+    world = newWorld;
+  }
 });
 
 
@@ -43,3 +52,31 @@ function getRandom(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function init(numLines, numColumns) {
+  var world = [];
+
+  for (var i = 0; i < numColumns; i++) {
+    world[i] = [];
+    for (var j = 0; j < numLines; j++) {
+      world[i][j] = getRandom(0, 1);
+    }
+  }
+  return world;
+}
+
+function neighborCount(i, j, world) {
+  var count = 0;
+
+  if (world[i - 1][j - 1] == 1) { count++; }
+  if (world[i][j - 1] == 1) { count++; }
+  if (world[i + 1][j - 1] == 1) { count++; }
+
+  if (world[i - 1][j] == 1) { count++; }
+  if (world[i + 1][j] == 1) { count++; }
+
+  if (world[i - 1][j + 1] == 1) { count++; }
+  if (world[i][j + 1] == 1) { count++; }
+  if (world[i + 1][j + 1] == 1) { count++; }
+
+  return count;
+}
